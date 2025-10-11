@@ -6,10 +6,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
-class AuthController extends Controller
+class AuthController extends Controller 
 {
-    public function register(Request $request)
+    use HasApiTokens, Notifiable;
+
+    public function register(Request $request) 
     {
         $request->validate([
             'name' => 'required|string',

@@ -15,5 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
-    })->create();
+        $exceptions->render(function (Illuminate\Auth\AuthenticationException $e, $request) {
+        // For API or JSON requests, return JSON instead of redirecting
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // For web routes, still redirect if needed
+        return redirect()->guest(route('login'));
+    });
+    })
+    ->create();
