@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 
 class CitizenController extends Controller
 {
-       public function __construct()
-    {
-        $this->middleware('auth:sanctum');
-    }
+    //    public function __construct()
+    // {
+    //    $this->middleware('auth:sanctum');
+    // }
 
     public function index()
     {
