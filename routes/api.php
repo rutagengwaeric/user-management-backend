@@ -28,8 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/citizens/my-profile', [CitizenController::class, 'myProfile']);
     Route::patch('/citizens/{id}/verify', [CitizenController::class, 'verify']);
     
-    // User management (system admin only)
-    Route::apiResource('users', UserController::class)->except(['store']);
+   // User management (system admin only)
+    Route::apiResource('users', UserController::class);
     
     // Analytics (policy maker only)
     Route::get('/analytics/stats', [AnalyticsController::class, 'getStats']);
