@@ -11,11 +11,11 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
 
-class AuthController extends Controller 
+class AuthController extends Controller
 {
     use HasApiTokens, Notifiable;
 
-   public function register(Request $request)
+    public function register(Request $request)
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
@@ -23,12 +23,21 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'sometimes|in:system_admin,local_leader,policy_maker,citizen',
-            // Citizen-specific fields
-            'national_id' => 'required_if:role,citizen|string|unique:citizens',
-            'full_name' => 'required_if:role,citizen|string|max:255',
-            'date_of_birth' => 'required_if:role,citizen|date',
-            'address' => 'required_if:role,citizen|string',
-            'phone_number' => 'required_if:role,citizen|string',
+            // nullable citizen fields 
+
+            // 'national_id' => 'required_if:role,citizen|string|unique:citizens',
+            // 'full_name' => 'required_if:role,citizen|string|max:255',
+            // 'date_of_birth' => 'required_if:role,citizen|date',
+            // 'address' => 'required_if:role,citizen|string',
+            // 'phone_number' => 'required_if:role,citizen|string',
+
+            'national_id' => 'nullable|string|unique:citizens',
+            'full_name' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'address' => 'nullable|string',
+            'phone_number' => 'nullable|string',
+
+
         ]);
 
         if ($validator->fails()) {

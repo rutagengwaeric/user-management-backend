@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Citizen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CitizenController extends Controller
 {
@@ -14,10 +15,14 @@ class CitizenController extends Controller
         $user = auth()->user();
 
         if ($user->isCitizen()) {
+            // $citizen = Citizen::where('user_id', $user)->first();
+           
             $citizen = Citizen::where('user_id', $user->id)->first();
-            return response()->json([
-                'citizens' => $citizen ? [$citizen] : []
+            //  Log::info('Citizensss profile ',$citizen);
+             return response()->json([
+                'citizens' => $citizen
             ]);
+
         }
 
         if ($user->isLocalLeader() || $user->isSystemAdmin()) {
@@ -39,9 +44,13 @@ class CitizenController extends Controller
     {
         $user = auth()->user();
 
+        Log::info("Authenticated user:" ,$user->toArray());
+
         if (!$user->isCitizen() && !$user->isLocalLeader()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
+
+         Log::info('Request Data: ', $request->all());
 
         $request->validate([
             'national_id' => 'required|unique:citizens',
@@ -50,6 +59,9 @@ class CitizenController extends Controller
             'address' => 'required|string',
             'phone_number' => 'required|string'
         ]);
+
+        Log::info('Creating citizen profile for user ID: ' . $user->id);
+      
 
         $citizenData = [
             'user_id' => $user->isCitizen() ? $user->id : $request->user_id,
@@ -90,9 +102,9 @@ class CitizenController extends Controller
         $citizen = Citizen::findOrFail($id);
 
         // Citizens can only update their own profile
-        if ($user->isCitizen() && $citizen->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // if ($user->isCitizen() && $citizen->user_id !== $user->id) {
+        //     return response()->json(['message' => 'Unauthorized'], 403);
+        // }
 
         // Only system admins and local leaders can update other profiles
         if (!$user->isSystemAdmin() && !$user->isLocalLeader() && $citizen->user_id !== $user->id) {
