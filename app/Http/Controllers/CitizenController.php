@@ -101,15 +101,17 @@ class CitizenController extends Controller
         $user = auth()->user();
         $citizen = Citizen::findOrFail($id);
 
+        
+
         // Citizens can only update their own profile
         // if ($user->isCitizen() && $citizen->user_id !== $user->id) {
         //     return response()->json(['message' => 'Unauthorized'], 403);
         // }
 
-        // Only system admins and local leaders can update other profiles
-        if (!$user->isSystemAdmin() && !$user->isLocalLeader() && $citizen->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // // Only system admins and local leaders can update other profiles
+        // if (!$user->isSystemAdmin() && !$user->isLocalLeader() && $citizen->user_id !== $user->id) {
+        //     return response()->json(['message' => 'Unauthorized'], 403);
+        // }
 
         $request->validate([
             'full_name' => 'sometimes|string|max:255',
